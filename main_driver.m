@@ -1,12 +1,11 @@
 %% The driver program to run all the component in this folder
 % Written by Ge Jin,jinwar@gmail.com
 
-% download data use SOD
+% if using sac dataset
+%sac2eventmat
 
-% run sac rotation
-
-% change sac database to mat
-sac2eventmat
+% download the data using 
+data_download
 
 % clean up multiple or close events
 cleanup_events
@@ -28,3 +27,6 @@ helmholtz_eq
 
 % stack the result of helmholtz
 stack_helm
+
+% export the result into xyz format
+make_xyz

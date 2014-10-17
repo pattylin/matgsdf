@@ -59,6 +59,10 @@ for ie = 1:length(matfiles)
 		disp(['Found ',matfilename,', skip this event!']);
 		continue;
 	end
+	if isfield(event,'isgood') && ~event.isgood
+		disp(['Manually move',matfilename,', skip this event!']);
+		continue;
+	end
 	disp(['Start to work on event: ',event.id]);
 
 	% set up some useful arrays
@@ -147,6 +151,10 @@ for ie = 1:length(matfiles)
 		end % end of nearby station loop
 	end % end of station loop
 
+	if csnum < 10
+		disp(['Event has too few cross-correlations!']);
+		continue;
+	end
 	% Calculate the coherency between each station pairs
 	for ics = 1:length(CS)
 		sta1 = CS(ics).sta1;

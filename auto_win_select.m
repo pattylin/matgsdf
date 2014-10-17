@@ -14,16 +14,16 @@ periods = parameters.periods;
 largest_epidist_range = parameters.largest_epidist_range;
 
 if ~exist('mingroupv')
-    mingroupv = 2;
+    mingroupv = parameters.min_groupv;
 end
 if ~exist('maxgroupv')
-    maxgroupv = 5;
+    maxgroupv = parameters.max_groupv;
 end
 if ~exist('bandnum')
     bandnum = 20;
 end
 if ~exist('center_freq')
-    center_freq = 0.025;
+    center_freq = parameters.cent_freq;
 end
 
 cycle_before = parameters.cycle_before;
@@ -63,7 +63,7 @@ isgood = [event.stadata(:).isgood];
 goodind = find(isgood>0);
 dist = [event.stadata(goodind).dist];
 if mean(dist) < min_dist_tol || mean(dist) > max_dist_tol
-    disp(['Event: ',event.dbpath,' is not in the proporal range']);
+    disp(['Event: ',event.id,' is not in the proporal range']);
     winpara = 0;
     outevent = event;
     return;
@@ -99,7 +99,7 @@ for ista = 1:length(event.stadata)
     taxis = bgtime + [0:Nt-1]'*dt;
     
     % Build up gaussian filter
-    [gausf,faxis] = build_gaus_filter(freqs,dt,Nt,0.06,0.1);
+    [gausf,faxis] = build_gaus_filter(freqs,dt,Nt,parameters.min_width,parameters.max_width);
     
     % get original data and make the fourier transform
     odata = event.stadata(ista).data;
@@ -266,7 +266,7 @@ for ista = 1:length(event.stadata)
 end % end of loop sta
 
 if good_sta_num < min_sta_num
-    disp(['Event: ',event.dbpath, ' doesn''t have enough stations, skip!']);
+    disp(['Event: ',event.id, ' doesn''t have enough stations, skip!']);
     winpara =0;
 	outevent = event;
     return
@@ -347,7 +347,7 @@ end
 
 bad_f_ind = find(groupv == mingroupv | groupv == maxgroupv);
 if length(bad_f_ind) > bad_f_num_tol
-    disp(['Event: ',event.dbpath, ' SNR is too low, skip!']);
+    disp(['Event: ',event.id, ' SNR is too low, skip!']);
     winpara = 0;
     outevent = event;
     return
